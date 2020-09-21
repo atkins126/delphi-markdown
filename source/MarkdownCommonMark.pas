@@ -28,6 +28,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 }
 
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 
 {
 How to use this - see MarkdownProcessor; this unit is not intended to be used directly
@@ -50,12 +51,9 @@ note about GFM:
 
 interface
 
-{$IFDEF FPC}
-{$MODE DELPHI}{$H+}
-{$ENDIF}
-
 uses
   SysUtils, Classes, Math, Generics.Collections, Character,
+  MarkdownUnicodeUtils,
   {$IFDEF FPC}
   RegExpr,
   UnicodeData,
@@ -465,7 +463,7 @@ type
     function htmlEscape(s : String) : String; overload;
     function htmlEscape(c : char) : String; overload;
     function urlEscape(s : String; ignoreExisting : boolean = false) : String; overload;
-    function urlEscape(c : char) : String; overload;
+    function urlEscape(c : UnicodeChar) : String; overload;
     function parseEntityString(entity : String): String;
 
 
@@ -2028,7 +2026,7 @@ begin
   result := FBuilder.ToString;
 end;
 
-function TCommonMarkEngine.urlEscape(c: char): String;
+function TCommonMarkEngine.urlEscape(c: UnicodeChar): String;
 var
   b : TBytes;
   i : integer;
@@ -2052,21 +2050,22 @@ end;
 
 function TCommonMarkEngine.urlEscape(s: String; ignoreExisting : boolean = false): String;
 var
-  ch : char;
-  i : integer;
+  ch : UnicodeChar;
+  cs : String;
 begin
   FBuilder.Clear;
-  for i := 1 to s.Length do
+  for ch in unicodeChars(s) do
   begin
-    ch := s[i];
-    if ignoreExisting and (ch = '%') and (StrToIntDef('X'+copy(s, i+1, 2),  -1) <> -1) then
-      FBuilder.Append(ch)
+    if ignoreExisting {and (ch = '%') and (StrToIntDef('X'+copy(s, i+1, 2),  -1) <> -1)} then
+    begin
+      cs := ch;
+      FBuilder.Append(cs);
+    end
     else
       FBuilder.Append(urlEscape(ch));
   end;
   result := FBuilder.ToString;
 end;
-
 
 function TCommonMarkEngine.inList(blocks: TObjectList<TCMBlock>; ordered: boolean; marker : String; indent : integer; grace : integer; out list: TCMListBlock): boolean;
 begin
@@ -3198,7 +3197,7 @@ end;
 function TCommonMarkEngine.parseEntityInner(lexer: TCMTextLexer): String;
 var
   s, c : String;
-  ch : char;
+  ch : UnicodeChar;
   i : integer;
 begin
   lexer.grab(cmEntity);
@@ -3211,13 +3210,15 @@ begin
   else if (s <> '') and s.StartsWith('#') and (s.Length <= 9) and (StrToIntDef(s.Substring(1), -1) <> -1) then
   begin
     i := StrToInt(s.Substring(1));
-    if i > 65535 then
+    if (i = 0) or (i > 65535) then
       ch := #$FFFD
     else
     begin
-      ch := char(i);
-      if (i = 0) {$IFNDEF FPC} or (ch.GetUnicodeCategory = TUnicodeCategory.ucUnassigned) {$ENDIF} then
+      ch := UnicodeChar(i);
+      {$IFNDEF FPC}
+      if (ch.GetUnicodeCategory = TUnicodeCategory.ucUnassigned) then
         ch := #$FFFD;
+      {$ENDIF}
     end;
     lexer.grab(cmEntity, s.Length+1);
     exit(ch);

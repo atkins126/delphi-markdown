@@ -28,6 +28,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 }
 
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
+
 interface
 
 uses
@@ -132,7 +134,7 @@ begin
     for i := 0 to str.length - 1 do
     begin
       ch := str[1 + i];
-      if (isWhitespace(ch)) then
+      if (ch.isWhitespace) then
       begin
         if (not wasWs) then
         begin
