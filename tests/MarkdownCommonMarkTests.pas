@@ -33,15 +33,10 @@ POSSIBILITY OF SUCH DAMAGE.
 interface
 
 uses
-  Windows, SysUtils, Classes,
+  SysUtils, Classes, Character, {$IFDEF WINDOWS} ShellApi, {$ENDIF} Generics.Collections,
   {$IFDEF FPC} FPCUnit, TestRegistry, {$ELSE} DUnitX.TestFramework, {$ENDIF}
-  Character, ShellApi, Generics.Collections,
   {$IFDEF FPC} FPJson, JsonParser, {$ELSE} Json, {$ENDIF}
   CommonTestBase, MarkdownCommonMark;
-
-var
-  TestFileCM: String = 'C:\work\markdown\resources\commonmark\spec.json';
-  TestFileGFM: String = 'C:\work\markdown\resources\commonmark\gfm_tests.json';
 
 type
   {$IFDEF FPC}
@@ -68,7 +63,7 @@ type
   GFMParserTestCaseAttribute = class (CommonMarkDownParserTestCaseAttributeBase);
   {$ENDIF}
 
-  TMarkdownCommonMarkTestBase = class abstract (TCommonTestCase)
+  TMarkdownCommonMarkTestBase = class abstract (TCommonTestSuiteCase)
   private
     function findTest(tests : TJSONArray; name : String) : TJSONObject;
   protected
@@ -94,6 +89,17 @@ implementation
 var
   gTestsBase : TJSONArray = nil;
   gTestsGFM : TJSONArray = nil;
+
+
+function TestFileCM : String;
+begin
+  result := IncludeTrailingPathDelimiter(GetCurrentDir) + 'resources/commonmark/spec.json';
+end;
+
+function TestFileGFM : String;
+begin
+  result := IncludeTrailingPathDelimiter(GetCurrentDir) + 'resources/commonmark/gfm_tests.json';
+end;
 
 // ** Utilities ****************************************************************
 

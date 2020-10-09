@@ -33,9 +33,8 @@ POSSIBILITY OF SUCH DAMAGE.
 interface
 
 uses
-  Windows, SysUtils, Classes,
+  SysUtils, Classes, Character,
   {$IFDEF FPC} FPCUnit, TestRegistry {$ELSE} DUnitX.TestFramework {$ENDIF},
-  Character, ShellApi,
   CommonTestBase, MarkdownDaringFireball;
 
 const
@@ -48,7 +47,7 @@ const
     'GitHub Issue 1', 'GitHub Issue 2', 'GitHub Issue 3', 'GitHub Issue 3a', 'GitHub Issue 4');
 
 var
-  TestFolder : String = 'C:\work\markdown\resources\df';
+  TestFolder : String = 'resources/df';
 
 
 type
@@ -66,7 +65,7 @@ type
 
   [TextFixture]
   {$ENDIF}
-  TMarkdownDaringFireballTest = class (TCommonTestCase)
+  TMarkdownDaringFireballTest = class (TCommonTestSuiteCase)
   private
     function openFile(name: String): String;
     function tidy(cnt: String): String;
@@ -76,6 +75,17 @@ type
     [MarkDownParserTestCase]
     {$ENDIF}
     procedure TestCase(name : String); override;
+  end;
+
+  {$IFNDEF FPC}
+  [TextFixture]
+  {$ENDIF}
+  TMarkdownDaringFireballTest2 = class (TCommonTestBaseCase)
+  published
+    {$IFNDEF FPC}
+    [TestCase]
+    {$ENDIF}
+    procedure TestIssue10;
   end;
 
 implementation
@@ -88,7 +98,7 @@ var
   LFileStream: TFilestream;
   bytes: TBytes;
 begin
-  filename := IncludeTrailingPathDelimiter(TestFolder) + name;
+  filename := IncludeTrailingPathDelimiter(GetCurrentDir)+IncludeTrailingPathDelimiter(TestFolder) + name;
   if FileExists(filename) then
   begin
     LFileStream := TFilestream.Create(filename, fmOpenRead + fmShareDenyWrite);
@@ -134,7 +144,11 @@ begin
     for i := 0 to str.length - 1 do
     begin
       ch := str[1 + i];
+      {$IFDEF FPC}
+      if isWhitespace(ch) then
+      {$ELSE}
       if (ch.isWhitespace) then
+      {$ENDIF}
       begin
         if (not wasWs) then
         begin
@@ -186,7 +200,6 @@ begin
   end;
 end;
 
-
 {$IFDEF FPC}
 
 { TMarkdownDaringFireballTests }
@@ -219,10 +232,28 @@ end;
 
 {$ENDIF}
 
+{ TMarkdownDaringFireballTest2 }
+
+procedure TMarkdownDaringFireballTest2.TestIssue10;
+var
+  processor: TMarkdownDaringFireball;
+  processed : String;
+begin
+  processor := TMarkdownDaringFireball.Create;
+  try
+    processed := processor.process('Please send comments to <email@example.com> ASAP');
+    assertEqual('<p>Please send comments to <a href="mailto:email@example.com">email@example.com</a> ASAP</p>'+#10, processed, 'Outputs differ');
+  finally
+    processor.Free;
+  end;
+end;
+
 initialization
 {$IFNDEF FPC}
   TDUnitX.RegisterTestFixture(TMarkdownDaringFireballTest);
+  TDUnitX.RegisterTestFixture(TMarkdownDaringFireballTest2);
 {$ELSE}
   RegisterTest('Daring Fireball', TMarkdownDaringFireballTests.create);
+  RegisterTest('Daring Fireball', TMarkdownDaringFireballTest2);
 {$ENDIF}
 end.
