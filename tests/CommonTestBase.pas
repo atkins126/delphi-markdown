@@ -33,7 +33,11 @@ POSSIBILITY OF SUCH DAMAGE.
 interface
 
 uses
+  SysUtils,
   {$IFDEF FPC} FPCUnit {$ELSE}DUnitX.TestFramework {$ENDIF};
+
+var
+  MDTestRoot : String;
 
 type
 
@@ -63,6 +67,8 @@ type
     procedure Test;
     {$ENDIF}
   end;
+
+function getCommandLineParam(name : String; var res : String) : boolean;
 
 implementation
 
@@ -112,5 +118,24 @@ begin
 end;
 
 {$ENDIF}
+
+function getCommandLineParam(name : String; var res : String) : boolean;
+var
+  i : integer;
+begin
+  {$IFDEF FPC}
+  result := false;
+  for i := 1 to paramCount - 1 do
+  begin
+    if paramStr(i) = '-'+name then
+    begin
+      res := paramStr(i+1);
+      exit(true);
+    end;
+  end;
+  {$ELSE}
+  result := FindCmdLineSwitch(name, res, true, [clstValueNextParam]);
+  {$ENDIF}
+end;
 
 end.
