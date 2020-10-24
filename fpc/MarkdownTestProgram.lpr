@@ -3,7 +3,7 @@ program MarkdownTestProgram;
 {$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 
 uses
-  Interfaces, SysUtils, Forms, GuiTestRunner, consoletestrunner,
+  Interfaces, SysUtils, Forms, xguitestrunner, consoletestrunner,
   MarkdownHTMLEntities, MarkdownCommonMark, MarkdownDaringFireball,
   CommonTestBase, MarkdownCommonMarkTests, MarkdownDaringFireballTests;
 
@@ -11,7 +11,8 @@ uses
 
 procedure RegisterTests;
 begin
-  MDTestRoot := getCurrentDir;
+  if not getCommandLineParam('mdRoot', MDTestRoot) then
+    MDTestRoot := getCurrentDir;
   MarkdownDaringFireballTests.RegisterTests;
   MarkdownCommonMarkTests.RegisterTests;
 end;
@@ -31,7 +32,8 @@ begin
   else
   begin
     Application.Initialize;
-    Application.CreateForm(TGuiTestRunner, TestRunner);
+    Application.CreateForm(TGuiXTestRunner, TestRunner);
+    TestRunner.FileName := IncludeTrailingPathDelimiter(MDTestRoot)+'tests.íni';
     Application.Run;
     Application.Free;
   end;

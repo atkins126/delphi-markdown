@@ -146,6 +146,13 @@ fpc/MarkdownTestProgram
 /source/lib/x86_64-win64
 /tests/lib/x86_64-win64
 
-fpc/MarkdownTestProgram.lpi
+.DS_Store
 
-tests/lib/x86_64-linux/
+fpc/lib/
+
+fpc/MarkdownTestProgram.app/
+/tests.íni
+
+tests/lib/
+/source/lib/x86_64-darwin
+/delphi/Win32/Debug
