@@ -10,6 +10,9 @@
       <Title Value="MarkdownTestProgram"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
+      <XPManifest>
+        <DpiAware Value="Per-monitor"/>
+      </XPManifest>
       <Icon Value="0"/>
     </General>
     <MacroValues Count="1">
@@ -28,7 +31,6 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="../source;../tests"/>
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -45,11 +47,6 @@
             <Debugging>
               <DebugInfoType Value="dsDwarf2Set"/>
             </Debugging>
-            <Options>
-              <Win32>
-                <GraphicApplication Value="True"/>
-              </Win32>
-            </Options>
           </Linking>
         </CompilerOptions>
       </Item2>
@@ -64,7 +61,6 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="../source;../tests"/>
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -100,7 +96,6 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="../source;../tests"/>
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -136,8 +131,8 @@
     </PublishOptions>
     <RunParams>
       <local>
-        <CommandLineParams Value="-mdRoot /home/gg/markdown"/>
-        <WorkingDirectory Value="/home/gg/markdown"/>
+        <CommandLineParams Value="-fpc4169C1B6-1D5C-4E4D-A790-8458C64CDA57 -run 0.0.0 -mdRoot C:/work/pascal/markdown"/>
+        <WorkingDirectory Value="C:/work/pascal/markdown"/>
       </local>
       <FormatVersion Value="2"/>
       <Modes Count="4">
@@ -149,8 +144,8 @@
         </Mode0>
         <Mode1 Name="linux">
           <local>
-            <CommandLineParams Value="-mdRoot /home/gg/markdown"/>
-            <WorkingDirectory Value="/home/gg/markdown"/>
+            <CommandLineParams Value="-mdRoot /home/grahame/work/markdown"/>
+            <WorkingDirectory Value="/home/grahame/work/markdown"/>
           </local>
         </Mode1>
         <Mode2 Name="osx">
@@ -161,54 +156,37 @@
         </Mode2>
         <Mode3 Name="windows">
           <local>
-            <CommandLineParams Value="-mdRoot C:/work/markdown"/>
-            <WorkingDirectory Value="C:/work/markdown"/>
+            <CommandLineParams Value="-fpc4169C1B6-1D5C-4E4D-A790-8458C64CDA57 -run 0.0.0 -mdRoot C:/work/pascal/markdown"/>
+            <WorkingDirectory Value="C:/work/pascal/markdown"/>
           </local>
         </Mode3>
       </Modes>
     </RunParams>
-    <RequiredPackages Count="3">
+    <RequiredPackages Count="6">
       <Item1>
-        <PackageName Value="fpcunittestrunner"/>
+        <PackageName Value="idetester"/>
       </Item1>
       <Item2>
-        <PackageName Value="LCL"/>
+        <PackageName Value="MarkdownTests"/>
       </Item2>
       <Item3>
-        <PackageName Value="FCL"/>
+        <PackageName Value="MarkdownEngine"/>
       </Item3>
+      <Item4>
+        <PackageName Value="fpcunittestrunner"/>
+      </Item4>
+      <Item5>
+        <PackageName Value="LCL"/>
+      </Item5>
+      <Item6>
+        <PackageName Value="FCL"/>
+      </Item6>
     </RequiredPackages>
-    <Units Count="7">
+    <Units Count="1">
       <Unit0>
         <Filename Value="MarkdownTestProgram.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
-      <Unit1>
-        <Filename Value="testcase1.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="TestCase1"/>
-      </Unit1>
-      <Unit2>
-        <Filename Value="../source/MarkdownDaringFireball.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit2>
-      <Unit3>
-        <Filename Value="../source/MarkdownCommonMark.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit3>
-      <Unit4>
-        <Filename Value="../tests/MarkdownDaringFireballTests.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit4>
-      <Unit5>
-        <Filename Value="../tests/MarkdownCommonMarkTests.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit5>
-      <Unit6>
-        <Filename Value="../tests/XGuiTestRunner.pas"/>
-        <IsPartOfProject Value="True"/>
-        <HasResources Value="True"/>
-      </Unit6>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -218,7 +196,6 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="../source;../tests"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
@@ -243,7 +220,7 @@
     </Linking>
   </CompilerOptions>
   <Debugging>
-    <Exceptions Count="5">
+    <Exceptions Count="6">
       <Item1>
         <Name Value="EAbort"/>
       </Item1>
@@ -259,6 +236,9 @@
       <Item5>
         <Name Value="EConvertError"/>
       </Item5>
+      <Item6>
+        <Name Value="EReadError"/>
+      </Item6>
     </Exceptions>
   </Debugging>
 </CONFIG>

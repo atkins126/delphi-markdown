@@ -3,9 +3,9 @@ program MarkdownTestProgram;
 {$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 
 uses
-  Interfaces, SysUtils, Forms, xguitestrunner, consoletestrunner,
-  MarkdownHTMLEntities, MarkdownCommonMark, MarkdownDaringFireball,
-  CommonTestBase, MarkdownCommonMarkTests, MarkdownDaringFireballTests;
+  {$IFDEF MSWINDOWS} Windows, {$ENDIF}
+  Interfaces, SysUtils, Forms, idetester_console,
+  CommonTestBase, MarkdownDaringFireballTests, MarkdownCommonMarkTests, idetester_runtime, idetester_form;
 
 {$R *.res}
 
@@ -18,12 +18,14 @@ begin
 end;
 
 var
-  testApp : TTestRunner;
+  testApp : TIdeTesterConsoleRunner;
 begin
   RegisterTests;
-  if (ParamStr(1) = '-ci') then
+  if IsRunningIDETests then
+    RunIDETests
+  else if (ParamStr(1) = '-ci') then
   begin
-    testApp := TTestRunner.Create(nil);
+    testApp := TIdeTesterConsoleRunner.Create(nil);
     testApp.Initialize;
     testApp.Title := 'Markdown Tests';
     testApp.Run;
@@ -31,9 +33,10 @@ begin
   end
   else
   begin
+    {$IFDEF MSWINDOWS} FreeConsole; {$ENDIF}
     Application.Initialize;
-    Application.CreateForm(TGuiXTestRunner, TestRunner);
-    TestRunner.FileName := IncludeTrailingPathDelimiter(MDTestRoot)+'tests.íni';
+    Application.CreateForm(TIdeTesterForm, IdeTesterForm);
+    IdeTesterForm.caption := 'Markdown Tests';
     Application.Run;
     Application.Free;
   end;

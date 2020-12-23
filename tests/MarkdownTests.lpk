@@ -11,40 +11,31 @@
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
-    <Files>
-      <Item>
+    <Files Count="3">
+      <Item1>
         <Filename Value="CommonTestBase.pas"/>
         <UnitName Value="CommonTestBase"/>
-      </Item>
-      <Item>
+      </Item1>
+      <Item2>
         <Filename Value="MarkdownCommonMarkTests.pas"/>
         <UnitName Value="MarkdownCommonMarkTests"/>
-      </Item>
-      <Item>
+      </Item2>
+      <Item3>
         <Filename Value="MarkdownDaringFireballTests.pas"/>
         <UnitName Value="MarkdownDaringFireballTests"/>
-      </Item>
-      <Item>
-        <Filename Value="xguitestrunner.pas"/>
-        <UnitName Value="xguitestrunner"/>
-      </Item>
+      </Item3>
     </Files>
-    <RequiredPkgs>
-      <Item>
-        <PackageName Value="SynEdit"/>
-      </Item>
-      <Item>
-        <PackageName Value="LCLBase"/>
-      </Item>
-      <Item>
-        <PackageName Value="fpcunitconsolerunner"/>
-      </Item>
-      <Item>
+    <CompatibilityMode Value="True"/>
+    <RequiredPkgs Count="3">
+      <Item1>
         <PackageName Value="MarkdownEngine"/>
-      </Item>
-      <Item>
-        <PackageName Value="FCL"/>
-      </Item>
+      </Item1>
+      <Item2>
+        <PackageName Value="fpcunittestrunner"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="LCL"/>
+      </Item3>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>
